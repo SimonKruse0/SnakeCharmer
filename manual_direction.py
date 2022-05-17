@@ -1,7 +1,10 @@
 from direction import Direction
 import getch
 
-def get_manual_direction(playfield):
+from playingfield import PlayingField
+
+
+def get_manual_direction(playing_field: PlayingField) -> Direction:
     direction = None
     while not direction:
         direction_input = getch.getch()
@@ -14,5 +17,3 @@ def get_manual_direction(playfield):
         if direction_input == "j":
             direction = Direction.LEFT
     return direction
-
-
