@@ -1,19 +1,24 @@
-from direction import Direction
+import direction
 import getch
 
-from playingfield import PlayingField
+import playingfield
 
+class Director:
+    def __init__(self) -> None:
+        pass
 
-def get_manual_direction(playing_field: PlayingField) -> Direction:
-    direction = None
-    while not direction:
-        direction_input = getch.getch()
-        if direction_input == "i":
-            direction = Direction.UP
-        if direction_input == "k":
-            direction = Direction.DOWN
-        if direction_input == "l":
-            direction = Direction.RIGHT
-        if direction_input == "j":
-            direction = Direction.LEFT
-    return direction
+    def get_direction(
+        self, playing_field: playingfield.PlayingField
+    ) -> direction.Direction:
+        chosen_direction = None
+        while not chosen_direction:
+            direction_input = getch.getch()
+            if direction_input == "i":
+                chosen_direction = direction.Direction.UP
+            if direction_input == "k":
+                chosen_direction = direction.Direction.DOWN
+            if direction_input == "l":
+                chosen_direction = direction.Direction.RIGHT
+            if direction_input == "j":
+                chosen_direction = direction.Direction.LEFT
+        return chosen_direction

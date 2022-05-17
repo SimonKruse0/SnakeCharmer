@@ -1,7 +1,7 @@
 from typing import Iterable, Optional, Tuple
 
-from direction import Direction
-from playingfield import PlayingField
+import direction
+import playingfield
 
 
 class SnakeState:
@@ -17,15 +17,15 @@ class OppositeDirectionException(Exception):
 class Snake:
     def __init__(
             self,
-            playing_field: PlayingField,
-            direction: Optional[Direction] = None,
+            playing_field,
+            initial_direction: Optional[direction.Direction] = None,
             shape: Optional[Iterable[Tuple[int, int]]] = None,
     ) -> None:
         self.playing_field = playing_field
-        self.direction = direction
+        self.direction = initial_direction
         self.state = SnakeState()
         if not self.direction:
-            self.direction = Direction.UP
+            self.direction = direction.Direction.UP
         self.shape = shape
         if not self.shape:
             head_y = int(self.playing_field.length_y / 2)
@@ -37,17 +37,17 @@ class Snake:
 
     @staticmethod
     def stepping_in_direction(
-            current_position: Tuple[int, int], direction: Direction
+            current_position: Tuple[int, int], stepping_direction: direction.Direction
     ) -> Tuple[int, int]:
-        if direction == Direction.UP:
+        if stepping_direction == direction.Direction.UP:
             return current_position[0] - 1, current_position[1]
-        if direction == Direction.DOWN:
+        if stepping_direction == direction.Direction.DOWN:
             return current_position[0] + 1, current_position[1]
-        if direction == Direction.LEFT:
+        if stepping_direction == direction.Direction.LEFT:
             return current_position[0], current_position[1] - 1
-        if direction == Direction.RIGHT:
+        if stepping_direction == direction.Direction.RIGHT:
             return current_position[0], current_position[1] + 1
-        raise Exception("Unrecognized direction")
+        raise Exception("Unrecognized initial_direction")
 
     def propagate(self) -> None:
         if self.state.eating:
@@ -90,12 +90,14 @@ class Snake:
     def snake_is_alive(self) -> bool:
         return not (self.snake_have_self_collided() or self.snake_have_crashed())
 
-    def set_direction(self, new_direction: Direction) -> None:
+    def set_direction(self, new_direction: direction.Direction) -> None:
         if not self.direction.is_opposite_direction(new_direction):
             self.direction = new_direction
-        raise OppositeDirectionException("Cannot choose opposite direction.")
+        raise OppositeDirectionException("Cannot choose opposite initial_direction.")
 
-    def update(self, direction_input: Optional[Direction] = None) -> object:
+    def update(
+            self, direction_input: Optional[direction.Direction] = None
+    ) -> SnakeState:
         if direction_input:
             try:
                 self.set_direction(direction_input)

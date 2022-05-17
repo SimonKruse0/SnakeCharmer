@@ -16,4 +16,4 @@ class Direction(Enum):
             return direction == Direction.LEFT
         if self == Direction.LEFT:
             return direction == Direction.RIGHT
-        raise Exception("Unknown direction encountered.")
+        raise Exception("Unknown initial_direction encountered.")

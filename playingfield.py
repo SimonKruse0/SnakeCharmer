@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple
 import cv2
 import numpy as np
 
-from snake import Snake
+import snake
 
 
 class PlayingField:
@@ -23,7 +23,7 @@ class PlayingField:
     def clear_playing_area(self) -> None:
         self.playing_area = np.zeros((self.length_x, self.length_y), dtype=np.int16)
 
-    def add_snake(self, snake: Snake, value: object = 1) -> None:
+    def add_snake(self, snake: snake.Snake, value: object = 1) -> None:
         self.clear_playing_area()
         for snake_part in snake.shape:
             self.playing_area.itemset(snake_part, value)
@@ -56,5 +56,7 @@ class PlayingField:
                 for x in range(self.length_x):
                     if self.playing_area[x, y] == 1:
                         img[x][y] = [255, 0, 0]
+                    elif self.playing_area[x, y] == 2:
+                        img[x][y] = [0, 255, 0]
             cv2.imshow("snake", img)
-            cv2.waitKey(0)
+            cv2.waitKey(100)
