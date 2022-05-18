@@ -8,11 +8,45 @@ import playingfield
 class Director:
     def __init__(self):
         self.firstrun = True
+        self.toEnd = True
+        self.toHome = True
+        self.n = True
+
+    def going_home(self, playing_field: playingfield.PlayingField):
+
+
+        current_position = playing_field.snake_head
+
+        if current_position == (0, playing_field.length_x - 1):
+            self.toEnd = False
+        if current_position == (0, 0):
+            self.n += 1
+            self.toHome = False
+            return None
+        if self.toEnd:
+             if current_position[1] == playing_field.length_x - 1:
+                return direction.Direction.UP
+             return direction.Direction.RIGHT
+        if self.toHome:
+            return direction.Direction.LEFT
+
+
+
+
 
     def get_direction(
         self, playing_field: playingfield.PlayingField
     ) -> direction.Direction:
 
+        if self.toEnd or self.toHome:
+            if self.going_home(playing_field):
+                return self.going_home(playing_field)
+
+        current_position = playing_field.snake_head
+
+        if current_position[0] == self.n % (playing_field.length_y - 1):
+            self.toEnd = True
+            self.toHome = True
         dirs = [
             direction.Direction.RIGHT,
             direction.Direction.LEFT,
@@ -20,23 +54,28 @@ class Director:
             direction.Direction.DOWN,
         ]
 
-        current_position = playing_field.snake_head
 
         chosen_direction = dirs[0]
 
-        if self.firstrun:
-            self.firstrun = False
-            return direction.Direction.UP
+
+        if current_position[0] == playing_field.length_y - 1:
+            self.toEnd = True
+            self.toHome = True
+            return direction.Direction.RIGHT
+        if current_position[1] == 0:
+
+            return direction.Direction.DOWN
+
+        # if self.firstrun:
+        #     self.firstrun = False
+        #     return direction.Direction.UP
+
 
         if current_position[1] == playing_field.length_x - 1:
             return direction.Direction.UP
 
 
-        if current_position[0] == playing_field.length_y - 1:
-            return direction.Direction.RIGHT
 
-        if current_position[1] == 0:
-            return direction.Direction.DOWN
 
 
 

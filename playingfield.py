@@ -59,4 +59,4 @@ class PlayingField:
                     elif self.playing_area[x, y] == 2:
                         img[x][y] = [0, 255, 0]
             cv2.imshow("snake", img)
-            cv2.waitKey(100)
+            cv2.waitKey(1)
