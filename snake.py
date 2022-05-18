@@ -108,7 +108,10 @@ class Snake:
         if self.state.alive:
             self.state.eating = self.eating_apple()
             self.playing_field.add_snake(self)
-            self.playing_field.add_apple()
+            try:
+                self.playing_field.add_apple()
+            except playingfield.PlayingFieldException:
+                pass
         else:
             self.state.eating = False
         return self.get_state()

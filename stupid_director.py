@@ -14,7 +14,6 @@ class Director:
 
     def going_home(self, playing_field: playingfield.PlayingField):
 
-
         current_position = playing_field.snake_head
 
         if current_position == (0, playing_field.length_x - 1):
@@ -24,13 +23,37 @@ class Director:
             self.toHome = False
             return None
         if self.toEnd:
-             if current_position[1] == playing_field.length_x - 1:
+            if current_position[1] == playing_field.length_x - 1:
                 return direction.Direction.UP
-             return direction.Direction.RIGHT
+            return direction.Direction.RIGHT
         if self.toHome:
             return direction.Direction.LEFT
 
+    def snaker(self, playing_field: playingfield.PlayingField) -> direction.Direction:
+        current_position = playing_field.snake_head
 
+        if current_position[0] == 0:
+            if current_position[1] == 0:
+                return direction.Direction.DOWN
+            return direction.Direction.LEFT
+
+        if current_position[1] == playing_field.length_x - 1:
+            return direction.Direction.UP
+
+        if current_position[0] == 1:
+            if current_position[1] % 2 == 0:
+                return direction.Direction.DOWN
+            return direction.Direction.RIGHT
+
+        if current_position[0] == playing_field.length_y - 1:
+            if current_position[1] % 2 == 0:
+                return direction.Direction.RIGHT
+            return direction.Direction.UP
+
+        if current_position[1] % 2 == 0:
+            return direction.Direction.DOWN
+
+        return direction.Direction.UP
 
 
 
@@ -38,11 +61,18 @@ class Director:
         self, playing_field: playingfield.PlayingField
     ) -> direction.Direction:
 
+        return self.snaker(playing_field)
+
         if self.toEnd or self.toHome:
             if self.going_home(playing_field):
                 return self.going_home(playing_field)
 
         current_position = playing_field.snake_head
+
+        if playing_field.apple[0] < current_position[0]:
+            self.n = -1
+            self.toEnd = True
+            self.toHome = True
 
         if current_position[0] == self.n % (playing_field.length_y - 1):
             self.toEnd = True
@@ -54,9 +84,7 @@ class Director:
             direction.Direction.DOWN,
         ]
 
-
         chosen_direction = dirs[0]
-
 
         if current_position[0] == playing_field.length_y - 1:
             self.toEnd = True
@@ -70,14 +98,8 @@ class Director:
         #     self.firstrun = False
         #     return direction.Direction.UP
 
-
         if current_position[1] == playing_field.length_x - 1:
             return direction.Direction.UP
-
-
-
-
-
 
         return direction.Direction.LEFT
 

@@ -7,6 +7,10 @@ import numpy as np
 import snake
 
 
+class PlayingFieldException(Exception):
+    pass
+
+
 class PlayingField:
     def __init__(
         self, length_x: int, length_y: int, topology: Optional[str] = None
@@ -34,7 +38,11 @@ class PlayingField:
 
     def place_apple(self) -> None:
         empty_fields = self.get_empty_fields()
-        self.apple = random.choice(empty_fields)
+        if empty_fields:
+            self.apple = random.choice(empty_fields)
+        else:
+            return
+            raise PlayingFieldException("No empty space to place apple.")
 
     def get_empty_fields(self) -> List[Tuple[int, int]]:
         empty_fields = []
