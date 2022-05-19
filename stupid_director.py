@@ -16,14 +16,14 @@ class Director:
 
         current_position = playing_field.snake_head
 
-        if current_position == (0, playing_field.length_x - 1):
+        if current_position == (0, playing_field.length_y - 1):
             self.toEnd = False
         if current_position == (0, 0):
             self.n += 1
             self.toHome = False
             return None
         if self.toEnd:
-            if current_position[1] == playing_field.length_x - 1:
+            if current_position[1] == playing_field.length_y - 1:
                 return direction.Direction.UP
             return direction.Direction.RIGHT
         if self.toHome:
@@ -37,7 +37,7 @@ class Director:
                 return direction.Direction.DOWN
             return direction.Direction.LEFT
 
-        if current_position[1] == playing_field.length_x - 1:
+        if current_position[1] == playing_field.length_y - 1:
             return direction.Direction.UP
 
         if current_position[0] == 1:
@@ -45,7 +45,7 @@ class Director:
                 return direction.Direction.DOWN
             return direction.Direction.RIGHT
 
-        if current_position[0] == playing_field.length_y - 1:
+        if current_position[0] == playing_field.length_x - 1:
             if current_position[1] % 2 == 0:
                 return direction.Direction.RIGHT
             return direction.Direction.UP
@@ -54,8 +54,6 @@ class Director:
             return direction.Direction.DOWN
 
         return direction.Direction.UP
-
-
 
     def get_direction(
         self, playing_field: playingfield.PlayingField
@@ -80,7 +78,7 @@ class Director:
             self.toEnd = True
             self.toHome = True
 
-        if current_position[0] == self.n % (playing_field.length_y - 1):
+        if current_position[0] == self.n % (playing_field.length_x - 1):
             self.toEnd = True
             self.toHome = True
         dirs = [
@@ -92,7 +90,7 @@ class Director:
 
         chosen_direction = dirs[0]
 
-        if current_position[0] == playing_field.length_y - 1:
+        if current_position[0] == playing_field.length_x - 1:
             self.toEnd = True
             self.toHome = True
             return direction.Direction.RIGHT
@@ -104,7 +102,7 @@ class Director:
         #     self.firstrun = False
         #     return direction.Direction.UP
 
-        if current_position[1] == playing_field.length_x - 1:
+        if current_position[1] == playing_field.length_y - 1:
             return direction.Direction.UP
 
         return direction.Direction.LEFT
@@ -117,9 +115,9 @@ class Director:
     #         dirs.remove(direction.Direction.UP)
     #     if current_position[1] == 0:
     #         dirs.remove(direction.Direction.LEFT)
-    #     if current_position[0] == playing_field.length_x - 1:
+    #     if current_position[0] == playing_field.length_y - 1:
     #         dirs.remove(direction.Direction.DOWN)
-    #     if current_position[1] == playing_field.length_y - 1:
+    #     if current_position[1] == playing_field.length_x - 1:
     #         dirs.remove(direction.Direction.RIGHT)
     #
     #     chosen_direction = random.choice(dirs)
@@ -145,11 +143,11 @@ class Director:
         apple = playing_field.apple
         current_position = playing_field.snake_head
 
-        for line in  playing_field.playing_area[1:]:
-            if 1 in line[apple[1]:]:
+        for line in playing_field.playing_area[1:]:
+            if 1 in line[current_position[1] + 1 :]:
                 return None
 
-        if current_position[0] == apple[0]:
+        if current_position[0] == apple[0] or apple[0] == 0:
             if current_position[1] < apple[1]:
                 return direction.Direction.RIGHT
         return None
@@ -160,16 +158,28 @@ class Director:
         if current_position[0] == 0:
             return None
 
-        if apple[0] == 0:
-            if current_position[1] > apple[1]:
-                if 1 not in playing_field.playing_area[0]:
-                    return direction.Direction.UP
+        for line in playing_field.playing_area[1:]:
+            if 1 in line[current_position[1] + 1 :]:
+                return None
+        # if apple[0] == 0:
+        #     if current_position[1] > apple[1]:
+        #         if 1 not in playing_field.playing_area[0]:
+        #             if (
+        #                 playing_field.playing_area[current_position[0] - 1][
+        #                     current_position[1]
+        #                 ]
+        #                 != 1
+        #             ):
+        #                 return direction.Direction.UP
 
-        for line in  playing_field.playing_area[1:]:
-            if 1 in line[current_position[1] + 1:]:
+        for line in playing_field.playing_area[1:]:
+            if 1 in line[current_position[1] + 1 :]:
                 return None
 
         if current_position[1] > apple[1]:
-            return direction.Direction.UP
+            if (
+                playing_field.playing_area[current_position[0] - 1][current_position[1]]
+                != 1
+            ):
+                return direction.Direction.UP
         return None
-
