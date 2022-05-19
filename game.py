@@ -58,7 +58,7 @@ class Game:
 
 
 if __name__ == "__main__":
-    my_playing_field = playingfield.PlayingField(2*10, 2*10)
+    my_playing_field = playingfield.PlayingField(2*20, 2*20)
     my_game = Game(
         playing_field=my_playing_field,
         output="opencv"

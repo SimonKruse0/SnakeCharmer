@@ -83,7 +83,10 @@ class Snake:
     def eating_apple(self) -> bool:
         snake_head = self.get_snake_head()
         if snake_head == self.playing_field.apple:
-            self.playing_field.place_apple()
+            try:
+                self.playing_field.place_apple()
+            except playingfield.PlayingFieldException:
+                pass
             return True
         return False
 
@@ -108,10 +111,7 @@ class Snake:
         if self.state.alive:
             self.state.eating = self.eating_apple()
             self.playing_field.add_snake(self)
-            try:
-                self.playing_field.add_apple()
-            except playingfield.PlayingFieldException:
-                pass
+            self.playing_field.add_apple()
         else:
             self.state.eating = False
         return self.get_state()

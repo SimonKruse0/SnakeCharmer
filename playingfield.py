@@ -41,7 +41,6 @@ class PlayingField:
         if empty_fields:
             self.apple = random.choice(empty_fields)
         else:
-            return
             raise PlayingFieldException("No empty space to place apple.")
 
     def get_empty_fields(self) -> List[Tuple[int, int]]:

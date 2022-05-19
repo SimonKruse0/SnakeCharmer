@@ -61,6 +61,12 @@ class Director:
         self, playing_field: playingfield.PlayingField
     ) -> direction.Direction:
 
+        if go_straight := self.go_straight(playing_field):
+            return go_straight
+
+        if skip_to_end := self.skip_to_end(playing_field):
+            return skip_to_end
+
         return self.snaker(playing_field)
 
         if self.toEnd or self.toHome:
@@ -135,3 +141,35 @@ class Director:
     #         test_n += 1
     #
     #     return chosen_direction
+    def go_straight(self, playing_field):
+        apple = playing_field.apple
+        current_position = playing_field.snake_head
+
+        for line in  playing_field.playing_area[1:]:
+            if 1 in line[apple[1]:]:
+                return None
+
+        if current_position[0] == apple[0]:
+            if current_position[1] < apple[1]:
+                return direction.Direction.RIGHT
+        return None
+
+    def skip_to_end(self, playing_field):
+        apple = playing_field.apple
+        current_position = playing_field.snake_head
+        if current_position[0] == 0:
+            return None
+
+        if apple[0] == 0:
+            if current_position[1] > apple[1]:
+                if 1 not in playing_field.playing_area[0]:
+                    return direction.Direction.UP
+
+        for line in  playing_field.playing_area[1:]:
+            if 1 in line[current_position[1] + 1:]:
+                return None
+
+        if current_position[1] > apple[1]:
+            return direction.Direction.UP
+        return None
+
