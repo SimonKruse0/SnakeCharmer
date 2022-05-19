@@ -1,3 +1,5 @@
+import numpy as np
+
 import direction
 import time
 import random
@@ -59,8 +61,9 @@ class Director:
         self, playing_field: playingfield.PlayingField
     ) -> direction.Direction:
 
-        if go_straight := self.go_straight(playing_field):
-            return go_straight
+        if np.count_nonzero(playing_field.playing_area) / playing_field.playing_area.size < 0.6:
+            if go_straight := self.go_straight(playing_field):
+                return go_straight
 
         if skip_to_end := self.skip_to_end(playing_field):
             return skip_to_end
@@ -144,7 +147,7 @@ class Director:
         current_position = playing_field.snake_head
 
         for line in playing_field.playing_area[1:]:
-            if 1 in line[current_position[1] + 1 :]:
+            if 1 in line[current_position[1] + 1 : apple[1] + 1]:
                 return None
 
         if current_position[0] == apple[0] or apple[0] == 0:
@@ -158,7 +161,7 @@ class Director:
         if current_position[0] == 0:
             return None
 
-        for line in playing_field.playing_area[1:]:
+        for line in playing_field.playing_area[0:]:
             if 1 in line[current_position[1] + 1 :]:
                 return None
         # if apple[0] == 0:
