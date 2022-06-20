@@ -67,3 +67,4 @@ class PlayingField:
                         img[x][y] = [0, 255, 0]
             cv2.imshow("snake", img)
             cv2.waitKey(1)
+        return

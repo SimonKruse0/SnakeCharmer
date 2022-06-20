@@ -34,7 +34,7 @@ class Game:
     def play_step(self) -> snake.SnakeState:
         direction = self.direction_function.get_direction(self.snake.playing_field)
         snake_state = self.snake.update(direction_input=direction)
-        os.system("cls" if os.name == "nt" else "clear")
+        # os.system("cls" if os.name == "nt" else "clear")
         self.playing_field.print_playing_field(self.output)
         return snake_state
 
@@ -55,6 +55,7 @@ class Game:
     def update_points(self, snake_state: snake.SnakeState) -> None:
         if snake_state.eating:
             self.points["apples"] += 1
+            print(self.points["apples"])
 
 
 if __name__ == "__main__":
@@ -62,6 +63,7 @@ if __name__ == "__main__":
     my_game = Game(
         playing_field=my_playing_field,
         output="opencv"
+        # output="none"
         # output="terminal",
     )
     my_game.set_state_to_new_game()
