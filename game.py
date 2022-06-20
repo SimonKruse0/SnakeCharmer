@@ -16,16 +16,12 @@ class Game:
         output: str = "terminal",
         direction_function: object = currentDirector(),
     ) -> None:
+        self.game_n = 0
         self.playing_field = playing_field
         self.direction_function = direction_function
         self.output = output
         if not self.playing_field:
             self.playing_field = playingfield.PlayingField(16, 16)
-        self.snake = snake.Snake(self.playing_field)
-        self.snake.playing_field.add_snake(self.snake)
-        self.snake.playing_field.place_apple()
-        self.snake.playing_field.add_apple()
-        self.points = self.get_zeroed_points()
 
     @staticmethod
     def get_zeroed_points() -> Dict[str, int]:
@@ -39,14 +35,29 @@ class Game:
         return snake_state
 
     def reset_game(self) -> None:
-        pass
+        self.step_n = 0
+        self.game_n += 1
+        self.snake = snake.Snake(self.playing_field)
+        self.snake.playing_field.add_snake(self.snake)
+        self.snake.playing_field.place_apple()
+        self.snake.playing_field.add_apple()
+        self.points = self.get_zeroed_points()
 
-    def set_state_to_new_game(self) -> None:
+    def start_new_game(self, name=None) -> None:
         self.reset_game()
+        if name:
+            self.name = name
+        else:
+            self.name = f"game_{self.game_n}"
+        self.analysis_file = open(f"output/{self.name}.csv", "w")
+        self.analysis_file.write("step_n,points\n")
+        self.analysis_file.write("0,0\n")
         snake_state = snake.SnakeState()
         while snake_state.alive:
             snake_state = my_game.play_step()
             self.update_points(snake_state)
+            self.step_n += 1
+        self.analysis_file.close()
         print(f"Points: {self.calculate_points()}")
 
     def calculate_points(self) -> int:
@@ -55,15 +66,17 @@ class Game:
     def update_points(self, snake_state: snake.SnakeState) -> None:
         if snake_state.eating:
             self.points["apples"] += 1
-            print(self.points["apples"])
+            if self.analysis_file:
+                self.analysis_file.write(f"{self.step_n},{self.calculate_points()}\n")
 
 
 if __name__ == "__main__":
-    my_playing_field = playingfield.PlayingField(2*10, 2*15)
+    my_playing_field = playingfield.PlayingField(2*5, 2*5)
     my_game = Game(
         playing_field=my_playing_field,
         output="opencv"
         # output="none"
         # output="terminal",
     )
-    my_game.set_state_to_new_game()
+    for game_number in range(5):
+        my_game.start_new_game()
