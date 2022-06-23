@@ -1,13 +1,11 @@
 import numpy as np
 
 import direction
-import time
-import random
-
 import playingfield
+from base_director import BaseDirector
 
 
-class Director:
+class Director(BaseDirector):
     def __init__(self):
         self.firstrun = True
         self.toEnd = True
@@ -61,7 +59,11 @@ class Director:
         self, playing_field: playingfield.PlayingField
     ) -> direction.Direction:
 
-        if np.count_nonzero(playing_field.playing_area) / playing_field.playing_area.size < 0.6:
+        if (
+            np.count_nonzero(playing_field.playing_area)
+            / playing_field.playing_area.size
+            < 0.6
+        ):
             if go_straight := self.go_straight(playing_field):
                 return go_straight
 

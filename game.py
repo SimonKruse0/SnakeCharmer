@@ -1,20 +1,24 @@
 # from manual_direction import get_manual_direction as current_direction_function
-from typing import Callable, Dict, Optional
 
-from stupid_director import Director as currentDirector
+import pathlib
+import shutil
+from typing import Dict, Optional
 
-import snake
+import matplotlib.pyplot as plt
+from numpy import loadtxt
+
 import playingfield
-
-import os
+import snake
+from base_director import BaseDirector
+from stupid_director import Director as currentDirector
 
 
 class Game:
     def __init__(
-        self,
-        playing_field: Optional[playingfield.PlayingField] = None,
-        output: str = "terminal",
-        direction_function: object = currentDirector(),
+            self,
+            playing_field: Optional[playingfield.PlayingField] = None,
+            output: str = "terminal",
+            direction_function: BaseDirector = None,
     ) -> None:
         self.game_n = 0
         self.playing_field = playing_field
@@ -54,7 +58,7 @@ class Game:
         self.analysis_file.write("0,0\n")
         snake_state = snake.SnakeState()
         while snake_state.alive:
-            snake_state = my_game.play_step()
+            snake_state = self.play_step()
             self.update_points(snake_state)
             self.step_n += 1
         self.analysis_file.close()
@@ -71,12 +75,12 @@ class Game:
 
 
 if __name__ == "__main__":
-    my_playing_field = playingfield.PlayingField(2*5, 2*5)
+    my_playing_field = playingfield.PlayingField(2 * 10, 2 * 15)
     my_game = Game(
         playing_field=my_playing_field,
-        output="opencv"
-        # output="none"
+        output="opencv",
+        # output="none",
         # output="terminal",
+        direction_function=currentDirector(),
     )
-    for game_number in range(5):
-        my_game.start_new_game()
+    my_game.start_new_game()

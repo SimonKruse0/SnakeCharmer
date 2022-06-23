@@ -1,11 +1,10 @@
 import direction
-import time
-import random
 
 import playingfield
+from base_director import BaseDirector
 
 
-class Director:
+class Director(BaseDirector):
     def __init__(self):
         self.firstrun = True
 
@@ -31,14 +30,11 @@ class Director:
         if current_position[1] == playing_field.length_x - 1:
             return direction.Direction.UP
 
-
         if current_position[0] == playing_field.length_y - 1:
             return direction.Direction.RIGHT
 
         if current_position[1] == 0:
             return direction.Direction.DOWN
-
-
 
         return direction.Direction.LEFT
 

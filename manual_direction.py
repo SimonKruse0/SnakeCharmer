@@ -2,8 +2,10 @@ import direction
 import getch
 
 import playingfield
+from base_director import BaseDirector
 
-class Director:
+
+class Director(BaseDirector):
     def __init__(self) -> None:
         pass
 
