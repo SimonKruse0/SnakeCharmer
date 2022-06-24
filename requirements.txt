@@ -1,0 +1,4 @@
+getch>=1
+matplotlib>=3
+numpy>=1
+opencv=>1
