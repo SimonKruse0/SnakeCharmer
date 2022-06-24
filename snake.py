@@ -1,6 +1,6 @@
 from typing import Iterable, Optional, Tuple
 
-import direction
+from src.enums import direction
 import playingfield
 
 

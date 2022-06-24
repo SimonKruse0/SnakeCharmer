@@ -1,8 +1,8 @@
-import direction
 import getch
 
+from src.enums import direction
 import playingfield
-from base_director import BaseDirector
+from Directors.base_director import BaseDirector
 
 
 class Director(BaseDirector):

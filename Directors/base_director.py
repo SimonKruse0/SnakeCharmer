@@ -1,4 +1,4 @@
-import direction
+from src.enums import direction
 import playingfield
 
 

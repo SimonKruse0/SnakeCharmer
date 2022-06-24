@@ -1,23 +1,17 @@
-# from manual_direction import get_manual_direction as current_direction_function
-
-import pathlib
-import shutil
 from typing import Dict, Optional
-
-import matplotlib.pyplot as plt
-from numpy import loadtxt
 
 import playingfield
 import snake
-from base_director import BaseDirector
-from stupid_director import Director as currentDirector
+from Directors.base_director import BaseDirector
+from src.enums.game_display import GameDisplay
+from Directors.stupid_director import Director as currentDirector
 
 
 class Game:
     def __init__(
             self,
             playing_field: Optional[playingfield.PlayingField] = None,
-            output: str = "terminal",
+            output: GameDisplay = GameDisplay.none,
             direction_function: BaseDirector = None,
     ) -> None:
         self.game_n = 0
@@ -34,7 +28,6 @@ class Game:
     def play_step(self) -> snake.SnakeState:
         direction = self.direction_function.get_direction(self.snake.playing_field)
         snake_state = self.snake.update(direction_input=direction)
-        # os.system("cls" if os.name == "nt" else "clear")
         self.playing_field.print_playing_field(self.output)
         return snake_state
 
@@ -78,9 +71,7 @@ if __name__ == "__main__":
     my_playing_field = playingfield.PlayingField(2 * 10, 2 * 15)
     my_game = Game(
         playing_field=my_playing_field,
-        output="opencv",
-        # output="none",
-        # output="terminal",
+        output=GameDisplay.opencv,
         direction_function=currentDirector(),
     )
     my_game.start_new_game()

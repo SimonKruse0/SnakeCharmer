@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 import snake
+from src.enums.game_display import GameDisplay
 
 
 class PlayingFieldException(Exception):
@@ -51,13 +52,13 @@ class PlayingField:
                     empty_fields.append((x, y))
         return empty_fields
 
-    def print_playing_field(self, output: str = "terminal") -> None:
-        if output == "terminal":
+    def print_playing_field(self, output: GameDisplay) -> None:
+        if output == GameDisplay.terminal:
             for line in self.playing_area:
                 for field in line:
                     print(field, end=" ")
                 print("\n")
-        elif output == "opencv":
+        elif output == GameDisplay.opencv:
             img = np.zeros((self.length_x, self.length_y, 3))
             for y in range(self.length_y):
                 for x in range(self.length_x):
