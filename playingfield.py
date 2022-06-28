@@ -12,9 +12,22 @@ class PlayingFieldException(Exception):
     pass
 
 
+def resize_playfield(img: np.ndarray, min_size: int) -> np.ndarray:
+    if img.shape[0] < min_size or img.shape[1] < min_size:
+        scale_factor = max(min_size / img.shape[0], min_size / img.shape[1])
+        img = cv2.resize(
+            img,
+            (0, 0),
+            fx=scale_factor,
+            fy=scale_factor,
+            interpolation=cv2.INTER_AREA,
+        )
+    return img
+
+
 class PlayingField:
     def __init__(
-        self, length_x: int, length_y: int, topology: Optional[str] = None
+            self, length_x: int, length_y: int, topology: Optional[str] = None
     ) -> None:
         self.length_x = length_x
         self.length_y = length_y
@@ -52,7 +65,7 @@ class PlayingField:
                     empty_fields.append((x, y))
         return empty_fields
 
-    def print_playing_field(self, output: GameDisplay) -> None:
+    def print_playing_field(self, output: GameDisplay, **kwargs) -> None:
         if output == GameDisplay.terminal:
             for line in self.playing_area:
                 for field in line:
@@ -66,6 +79,8 @@ class PlayingField:
                         img[x][y] = [255, 0, 0]
                     elif self.playing_area[x, y] == 2:
                         img[x][y] = [0, 255, 0]
+            if output_size := kwargs.get("output_size"):
+                img = resize_playfield(img, output_size)
             cv2.imshow("snake", img)
             cv2.waitKey(1)
         return

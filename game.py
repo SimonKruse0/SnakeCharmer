@@ -1,18 +1,19 @@
+from pathlib import Path
 from typing import Dict, Optional
 
 import playingfield
 import snake
 from Directors.base_director import BaseDirector
-from src.enums.game_display import GameDisplay
 from Directors.stupid_director import Director as currentDirector
+from src.enums.game_display import GameDisplay
 
 
 class Game:
     def __init__(
-            self,
-            playing_field: Optional[playingfield.PlayingField] = None,
-            output: GameDisplay = GameDisplay.none,
-            direction_function: BaseDirector = None,
+        self,
+        playing_field: Optional[playingfield.PlayingField] = None,
+        output: GameDisplay = GameDisplay.none,
+        direction_function: BaseDirector = None,
     ) -> None:
         self.game_n = 0
         self.playing_field = playing_field
@@ -40,21 +41,26 @@ class Game:
         self.snake.playing_field.add_apple()
         self.points = self.get_zeroed_points()
 
-    def start_new_game(self, name=None) -> None:
+    def start_new_game(self, name=None, storage_path: Optional[Path] = None) -> None:
         self.reset_game()
         if name:
             self.name = name
         else:
             self.name = f"game_{self.game_n}"
-        self.analysis_file = open(f"output/{self.name}.csv", "w")
-        self.analysis_file.write("step_n,points\n")
-        self.analysis_file.write("0,0\n")
+        if storage_path:
+            storage_path.joinpath("raw_data").mkdir(exist_ok=True)
+            self.analysis_file = open(
+                storage_path.joinpath("raw_data").joinpath(f"{self.name}.csv"), "w"
+            )
+            self.analysis_file.write("step_n,points\n")
+            self.analysis_file.write("0,0\n")
         snake_state = snake.SnakeState()
         while snake_state.alive:
             snake_state = self.play_step()
             self.update_points(snake_state)
             self.step_n += 1
-        self.analysis_file.close()
+        if storage_path:
+            self.analysis_file.close()
         print(f"Points: {self.calculate_points()}")
 
     def calculate_points(self) -> int:
