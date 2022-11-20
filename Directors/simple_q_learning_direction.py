@@ -12,6 +12,13 @@ from Directors.base_director import BaseDirector
 # l1 distance vector to nearst border.   dist(head, obsticle) = (apple_x-head_x, apple_y-head_y)
 #  
 
+class T(tuple):
+    def __add__(self, other):
+        return T(x + y for x, y in zip(self, other))
+
+    def __sub__(self, other):
+        return T(x - y for x, y in zip(self, other))
+
 class Director(BaseDirector):
     def __init__(self) -> None:
         self.eat_reward = 10
@@ -33,6 +40,7 @@ class Director(BaseDirector):
                         for x_obsticle in distance_1_range:
                             for y_obsticle in distance_1_range:
                                 q_table[((x_apple, y_apple), (x_body,y_body), (x_obsticle, y_obsticle))] = np.random.uniform(-5, 0, 4)
+        return q_table
 
     def dist_to_nearest_body_part(playing_field: PlayingField, snake_head):
         #body is 1's in self.playing_area
@@ -45,13 +53,19 @@ class Director(BaseDirector):
         #To fint the limited state space -> smaller q-tabel
         pass
 
+    def get_observation(self, playing_field):
+        apple = T(playing_field.apple)
+        snake_head = T(playing_field.snake_head)
+
+        return (snake_head-apple, snake_headc-apple)
+
     def get_direction(
         self, playing_field: PlayingField
     ) -> Direction:
         snake_head = playing_field.snake_head
         apple = playing_field.apple
 
-        self.observation = (snake_head-apple,self.dist_to_nearest_body_part(playing_field, snake_head), self.dist_to_nearest_boundary())
+        self.observation = self.get_observation(playing_field) #(snake_head-apple,self.dist_to_nearest_body_part(playing_field, snake_head), self.dist_to_nearest_boundary())
         if np.random.random() > self.epsilon:
             # GET THE ACTION
             obs = self.clip_distances(self.observation)
